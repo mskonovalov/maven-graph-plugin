@@ -19,6 +19,9 @@
             <id>janssk1</id>
             <name>Koen Janssens</name>
         </developer>
+        <developer>
+            <id>mskonovalov</id>
+        </developer>
     </developers>
     <properties>
         <mavenVersion>3.0.5</mavenVersion>
