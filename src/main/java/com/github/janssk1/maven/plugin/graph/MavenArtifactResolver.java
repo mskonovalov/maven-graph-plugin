@@ -30,14 +30,16 @@ public class MavenArtifactResolver implements ArtifactResolver{
     private final ArtifactRepository localRepository;
     private final ArtifactFactory artifactFactory;
     private final MavenProjectBuilder mavenProjectBuilder;
+    private final List<ArtifactRepository> remoteRepositories;
 
     private static final String POM_TYPE = "pom";
 
-    public MavenArtifactResolver(Log logger, ArtifactRepository localRepository, ArtifactFactory artifactFactory, MavenProjectBuilder mavenProjectBuilder) {
+    public MavenArtifactResolver(Log logger, ArtifactRepository localRepository, List<ArtifactRepository> remoteRepositories, ArtifactFactory artifactFactory, MavenProjectBuilder mavenProjectBuilder) {
         this.logger = logger;
         this.localRepository = localRepository;
         this.artifactFactory = artifactFactory;
         this.mavenProjectBuilder = mavenProjectBuilder;
+        this.remoteRepositories = remoteRepositories;
     }
 
     private MavenProject getMavenProject(ArtifactRevisionIdentifier artifactIdentifier) throws ProjectBuildingException {
@@ -46,7 +48,7 @@ public class MavenArtifactResolver implements ArtifactResolver{
         org.apache.maven.artifact.Artifact artifact = artifactFactory.createArtifact(artifactIdentifier.getGroupId(), artifactIdentifier.getArtifactId(), artifactIdentifier.getVersion(), org.apache.maven.artifact.Artifact.SCOPE_COMPILE, POM_TYPE);
 
         return mavenProjectBuilder.buildFromRepository(
-                artifact, Collections.<ArtifactRepository>emptyList(), localRepository, false);
+(??)                artifact, remoteRepositories, localRepository, false);
     }
 
     public Artifact resolveArtifact(ArtifactRevisionIdentifier identifier) {

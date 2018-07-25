@@ -5,6 +5,9 @@ import static com.github.janssk1.maven.plugin.graph.DependencyOptions.GraphType.
 import static com.github.janssk1.maven.plugin.graph.DependencyOptions.GraphType.TEST;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.repository.DefaultArtifactRepository;
@@ -281,7 +284,7 @@ public class GraphBuilderTest extends PlexusTestCase
     URL repository = Thread.currentThread().getContextClassLoader().getResource("repository");
     ArtifactRepository localRepository = new DefaultArtifactRepository("local", repository.toString(), new DefaultRepositoryLayout());
     Log log = new SystemStreamLog();
-    return new BreadthFirstGraphBuilder(log, new MavenArtifactResolver(log, localRepository, artifactFactory, mavenProjectBuilder));
+    return new BreadthFirstGraphBuilder(log, new MavenArtifactResolver(log, localRepository, new ArrayList<ArtifactRepository>(), artifactFactory, mavenProjectBuilder));
   }
 
 }

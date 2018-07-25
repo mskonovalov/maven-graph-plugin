@@ -141,13 +141,23 @@ public class GraphMojo extends AbstractMojo
    * @readonly
    */
   private ArtifactRepository  localRepository;
+  
+  /**
+   * remote repositories
+   * 
+   * @parameter expression="${project.remoteRepositories}"
+   * @required
+   * @readonly
+   */
+  private List<ArtifactRepository> remoteRepositories;
+
 
   public void execute() throws MojoExecutionException
   {
 
     getLog().info("Using graph.reports=" + reports);
     List<DependencyOptions> reportDefinitions = DependencyOptions.parseReportDefinitions(reports);
-    ArtifactResolver artifactResolver = new MavenArtifactResolver(getLog(), localRepository, this.artifactFactory, mavenProjectBuilder);
+    ArtifactResolver artifactResolver = new MavenArtifactResolver(getLog(), localRepository, remoteRepositories, this.artifactFactory, mavenProjectBuilder);
     for (DependencyOptions reportDefinition : reportDefinitions)
     {
       buildGraph(artifactResolver, reportDefinition);
