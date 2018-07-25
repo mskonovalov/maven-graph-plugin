@@ -48,7 +48,7 @@ public class MavenArtifactResolver implements ArtifactResolver{
         org.apache.maven.artifact.Artifact artifact = artifactFactory.createArtifact(artifactIdentifier.getGroupId(), artifactIdentifier.getArtifactId(), artifactIdentifier.getVersion(), org.apache.maven.artifact.Artifact.SCOPE_COMPILE, POM_TYPE);
 
         return mavenProjectBuilder.buildFromRepository(
-(??)                artifact, remoteRepositories, localRepository, false);
+                artifact, remoteRepositories, localRepository, false);
     }
 
     public Artifact resolveArtifact(ArtifactRevisionIdentifier identifier) {
