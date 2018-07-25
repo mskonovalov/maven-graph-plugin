@@ -24,7 +24,7 @@ public class GraphMLGenerator implements GraphSerializer
   private class Builder
   {
 
-    private final static String TMPL_BASE = "com/github.janssk1/maven/plugin/graph/graphml";
+    private final static String TMPL_BASE = "com/github/janssk1/maven/plugin/graph/graphml";
     private final Writer        out;
 
     public Builder(Writer out)
