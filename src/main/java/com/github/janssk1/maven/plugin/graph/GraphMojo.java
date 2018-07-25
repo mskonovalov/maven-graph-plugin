@@ -4,10 +4,12 @@ import com.github.janssk1.maven.plugin.graph.domain.ArtifactRevisionIdentifier;
 import com.github.janssk1.maven.plugin.graph.graph.Graph;
 import com.github.janssk1.maven.plugin.graph.graphml.GraphMLGenerator;
 import com.github.janssk1.maven.plugin.graph.graphml.SimpleVertexRenderer;
+import org.apache.maven.artifact.factory.ArtifactFactory;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.project.MavenProjectBuilder;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
 import org.codehaus.plexus.util.StringUtils;
@@ -25,7 +27,10 @@ import java.util.List;
 public class GraphMojo extends AbstractMojo {
 
     @Component
-    private ProjectBuilder mavenProjectBuilder;
+    private ArtifactFactory artifactFactory;
+
+    @Component
+    private MavenProjectBuilder mavenProjectBuilder;
 
     @Component
     private RepositorySystem repositorySystem;
@@ -93,7 +98,7 @@ public class GraphMojo extends AbstractMojo {
         getLog().info("Using includeGroupId=" + includeGroupId);
         getLog().info("Using excludedGroupIds=" + (excludedGroupIds == null ? "<null>" : StringUtils.join(excludedGroupIds, ",")));
         List<DependencyOptions> reportDefinitions = DependencyOptions.parseReportDefinitions(reports);
-        ArtifactResolver artifactResolver = new MavenArtifactResolver(getLog(), localRepository, remoteRepositories, repositorySystem, mavenProjectBuilder);
+        ArtifactResolver artifactResolver = new MavenArtifactResolver(getLog(), localRepository, remoteRepositories, artifactFactory, mavenProjectBuilder);
         for (DependencyOptions reportDefinition : reportDefinitions) {
             buildGraph(artifactResolver, reportDefinition);
         }

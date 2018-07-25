@@ -53,10 +53,7 @@ public class MavenArtifactResolver implements ArtifactResolver{
 
     public Artifact resolveArtifact(ArtifactRevisionIdentifier identifier) {
         try {
-            MavenProject mavenProject;
-            mavenProject = getMavenProject(identifier);
-
-            return createArtifact(identifier, mavenProject);
+            return createArtifact(identifier, getMavenProject(identifier));
         } catch (ProjectBuildingException e) {
             logger.warn(e);
             return new MockArtifact();
@@ -65,20 +62,16 @@ public class MavenArtifactResolver implements ArtifactResolver{
 
     private void configureArtifact(ArtifactImpl artifact, MavenProject mavenProject) {
         artifact.getDependencyManagerDependencies().clear();
-
         if (mavenProject.getDependencyManagement() != null) {
-            List<Dependency> dependencies = mavenProject.getDependencyManagement().getDependencies();
-            for (Dependency dependency : dependencies) {
+            for (Dependency dependency : mavenProject.getDependencyManagement().getDependencies()) {
                 artifact.getDependencyManagerDependencies().add(MavenHelper.createArtifactDependency(dependency));
             }
         }
     }
 
     private Artifact createArtifact(ArtifactRevisionIdentifier id, MavenProject mavenProject) {
-        ArtifactImpl artifact = new ArtifactImpl(mavenProject);
-        File path = getArtifactFile(id, mavenProject);
-        long fileLength = path.length();
-        artifact.setSize(fileLength);
+        ArtifactImpl artifact = new ArtifactImpl();
+        artifact.setSize(getArtifactFile(id, mavenProject).length());
         artifact.setDependencies(MavenHelper.resolveDependencies(mavenProject));
         configureArtifact(artifact, mavenProject);
         return artifact;
@@ -86,12 +79,11 @@ public class MavenArtifactResolver implements ArtifactResolver{
 
     private File getArtifactFile(ArtifactRevisionIdentifier id, MavenProject mavenProject) {
         id = applyRelocation(id, mavenProject);
-        org.apache.maven.artifact.Artifact mainArtifact = mavenProject.getArtifact();
         //add classifier..
-        ArtifactHandler artifactHandler = new MyArtifactHandler(mainArtifact.getArtifactHandler());
-        mainArtifact = new DefaultArtifact(id.getArtifactIdentifier().getGroupId(), id.getArtifactIdentifier().getArtifactId(), VersionRange.createFromVersion(id.getVersion()), mainArtifact.getScope(), mainArtifact.getType(), id.getClassifier(), artifactHandler);
+        ArtifactHandler artifactHandler = new MyArtifactHandler(mavenProject.getArtifact().getArtifactHandler());
+        org.apache.maven.artifact.Artifact mainArtifact2 = new DefaultArtifact(id.getArtifactIdentifier().getGroupId(), id.getArtifactIdentifier().getArtifactId(), VersionRange.createFromVersion(id.getVersion()), mavenProject.getArtifact().getScope(), mavenProject.getArtifact().getType(), id.getClassifier(), artifactHandler);
 
-        String relativePath = localRepository.pathOf(mainArtifact);
+        String relativePath = localRepository.pathOf(mainArtifact2);
         return new File(localRepository.getBasedir(), relativePath);
     }
 

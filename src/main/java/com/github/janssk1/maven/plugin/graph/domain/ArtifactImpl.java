@@ -11,14 +11,9 @@ import java.util.List;
  * Time: 9:53 PM
  */
 public class ArtifactImpl implements Artifact {
-    private MavenProject model;
     private List<ArtifactDependency> dependencies;
     private List<ArtifactDependency> dependencyManagerDependencies = new ArrayList<ArtifactDependency>();
     private long size;
-
-    public ArtifactImpl(MavenProject model) {
-        this.model = model;
-    }
 
     public List<ArtifactDependency> getDependencies() {
         return dependencies;

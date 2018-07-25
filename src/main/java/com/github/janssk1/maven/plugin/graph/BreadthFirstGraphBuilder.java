@@ -127,7 +127,7 @@ public class BreadthFirstGraphBuilder implements GraphBuilder
             }
           }
         }
-        if (excludeArtifact == false && excludedArtifactIds != null && excludedArtifactIds.length != 0)
+        if (!excludeArtifact && excludedArtifactIds != null && excludedArtifactIds.length != 0)
         {
           for (String excludedArtifact : excludedArtifactIds)
           {
@@ -216,7 +216,7 @@ public class BreadthFirstGraphBuilder implements GraphBuilder
 
   }
 
-  private static interface DependencyAttributeRetriever
+  private interface DependencyAttributeRetriever
   {
     String getAttributeValue(ArtifactDependency dep);
   }
@@ -253,7 +253,6 @@ public class BreadthFirstGraphBuilder implements GraphBuilder
 
   public Graph buildGraph(ArtifactRevisionIdentifier artifact, DependencyOptions options)
   {
-    //getAllDependencies(artifact);
     Graph graph = new Graph(artifact);
     getAllDependencies(graph.getRoot(), options);
     return graph;
